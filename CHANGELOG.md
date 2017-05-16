@@ -1,3 +1,3 @@
-## 0.1.0 / _Not released yet_
+## 1.0.0 / 2017-05-16
 
 - Initial public release

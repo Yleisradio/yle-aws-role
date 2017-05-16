@@ -1,7 +1,7 @@
 module Yle
   module AWS
     class Role
-      VERSION = '0.1.0.dev'.freeze
+      VERSION = '1.0.0'.freeze
     end
   end
 end
