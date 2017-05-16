@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'pathname'
-ENV['BUNDLE_GEMFILE'] ||=
-  File.expand_path('../../Gemfile', Pathname.new(__FILE__).realpath)
-
-require 'bundler/setup'
+require 'bundler/setup' if File.exist? File.expand_path('../../Gemfile', __FILE__)
 require 'yle/aws/role/cli'
 
 cli = Yle::AWS::Role::Cli.new(ARGV)
