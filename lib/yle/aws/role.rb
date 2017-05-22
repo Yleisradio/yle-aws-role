@@ -12,7 +12,7 @@ module Yle
       # Default duration in seconds when assuming a role
       DEFAULT_DURATION = 900
 
-      def self.assume_role(account_name, role_name, duration = nil)
+      def self.assume_role(account_name, role_name = nil, duration = nil)
         account_alias = accounts.find(account_name)
         if !account_alias
           raise Errors::AccountNotFoundError, "No account found for '#{account_name}'"
@@ -31,16 +31,27 @@ module Yle
         @accounts ||= Accounts.new(config['accounts'])
       end
 
+      def self.default_role_name
+        config['defaults']['role']
+      end
+
+      def self.default_duration
+        config['defaults']['duration'] || DEFAULT_DURATION
+      end
+
       attr_reader :account, :role_name, :credentials
 
-      def initialize(account_alias, role_name, duration = nil)
+      def initialize(account_alias, role_name = nil, duration = nil)
         @account = account_alias
-        @role_name = role_name
+        @role_name = role_name || Role.default_role_name
+        duration ||= Role.default_duration
+
+        raise Errors::AssumeRoleError, 'Role name not specified' if !@role_name
 
         @credentials = Aws::AssumeRoleCredentials.new(
           role_arn: role_arn,
           role_session_name: session_name,
-          duration_seconds: duration || DEFAULT_DURATION
+          duration_seconds: duration
         ).credentials
       rescue Aws::STS::Errors::ServiceError,
         Aws::Errors::MissingCredentialsError => e
