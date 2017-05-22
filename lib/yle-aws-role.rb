@@ -1,0 +1,1 @@
+require 'yle/aws/role'
