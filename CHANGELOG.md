@@ -1,4 +1,4 @@
-## 1.0.2 / _Not released yet_
+## 1.1.0 / 2017-05-23
 
 - Support default role in the `Role` class
 - Support `require 'yle-aws-role'`
