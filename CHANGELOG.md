@@ -1,3 +1,6 @@
+## 1.1.1 / _Not released yet_
+
+
 ## 1.1.0 / 2017-05-23
 
 - Support default role in the `Role` class
