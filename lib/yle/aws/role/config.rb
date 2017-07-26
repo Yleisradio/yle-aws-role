@@ -3,6 +3,7 @@ require 'yaml'
 module Yle
   module AWS
     class Role
+      # rubocop:disable Metrics/BlockLength
       Config = Struct.new(:accounts, :defaults) do
         def self.default_path
           ENV.fetch('ASU_CONFIG') { File.join(Dir.home, '.aws', 'asu.yaml') }

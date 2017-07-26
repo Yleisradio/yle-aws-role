@@ -34,7 +34,11 @@ describe Yle::AWS::Role::Config do
 
     context 'when the config file exists' do
       let(:config_file) { 'spec/fixtures/config/asu.yaml' }
-      it { is_expected.to eq(described_class.default_config.merge('defaults' => { 'role' => 'dev' })) }
+      it do
+        is_expected.to eq(
+          described_class.default_config.merge('defaults' => { 'role' => 'dev' })
+        )
+      end
     end
 
     context 'when the config file does not exist' do

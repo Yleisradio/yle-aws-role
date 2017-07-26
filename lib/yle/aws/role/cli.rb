@@ -12,15 +12,18 @@ module Yle
           parse_args(argv)
         end
 
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def parse_args(argv)
           @opts = Slop.parse(argv) do |o|
             o.banner = 'Usage: asu <account> [options] -- [command ...]'
             o.separator '   or: asu --list'
             o.separator ''
             o.separator '    account         The account ID or pattern of the role account'
-            o.separator '    command         Command to execute with the role. Defaults to launching new shell session.'
+            o.separator '    command         Command to execute with the role. ' \
+                                            'Defaults to launching new shell session.'
             o.separator ''
-            o.integer '-d', '--duration', "Duration for the role credentials. Default: #{Role.default_duration}"
+            o.integer '-d', '--duration', 'Duration for the role credentials. ' \
+                                          "Default: #{Role.default_duration}"
             o.bool '--env', 'Print out environment variables and exit'
             o.bool '-l', '--list', 'Print out all configured account aliases'
             o.bool '-q', '--quiet', 'Be quiet'
@@ -54,12 +57,9 @@ module Yle
         end
 
         def execute
-          if opts[:list]
-            puts Role.accounts
-            return
-          end
+          return list_accounts if opts[:list]
 
-          Role.assume_role(account_name, opts[:role], opts[:duration]) do |role|
+          assume_role(account_name, opts[:role], opts[:duration]) do |role|
             STDERR.puts("Assumed role #{role.name}") if !opts[:quiet]
 
             if opts[:env]
@@ -68,25 +68,32 @@ module Yle
               run_command
             end
           end
+        end
+
+        def list_accounts
+          puts Role.accounts
+        end
+
+        def assume_role(account_name, role_name, duration, &block)
+          Role.assume_role(account_name, role_name, duration, &block)
         rescue Errors::AssumeRoleError => e
           STDERR.puts e
           exit 1
         end
 
         def run_command
-          cmd = command
-          if cmd.empty?
+          if command.empty?
             shell = ENV.fetch('SHELL', 'bash')
-            cmd = [shell]
+            command = [shell]
 
             if !opts[:quiet]
               puts "Executing shell '#{shell}' with the assumed role"
-              puts "Use `exit` to quit"
+              puts 'Use `exit` to quit'
               puts
             end
           end
 
-          ret = system(*cmd)
+          ret = system(*command)
           STDERR.puts "Failed to execute '#{cmd.first}'" if ret.nil?
           exit(1) if !ret
         end

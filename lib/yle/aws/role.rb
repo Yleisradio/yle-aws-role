@@ -54,12 +54,12 @@ module Yle
           duration_seconds: duration
         ).credentials
       rescue Aws::STS::Errors::ServiceError,
-        Aws::Errors::MissingCredentialsError => e
+             Aws::Errors::MissingCredentialsError => e
         raise Errors::AssumeRoleError, "Failed to assume role #{role_arn}: #{e}"
       end
 
       def with_env
-        old_env = set_env_vars(env_vars)
+        old_env = export_env_vars(env_vars)
         old_credentials = Aws.config[:credentials]
         Aws.config.update(credentials: credentials)
 
@@ -70,7 +70,7 @@ module Yle
         else
           Aws.config.delete(:credentials)
         end
-        set_env_vars(old_env)
+        export_env_vars(old_env)
       end
 
       def env_vars
@@ -82,7 +82,7 @@ module Yle
         }
       end
 
-      def set_env_vars(vars)
+      def export_env_vars(vars)
         old_env = {}
         vars.each do |key, value|
           old_env[key] = ENV[key]

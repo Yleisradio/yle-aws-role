@@ -1,0 +1,31 @@
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - 'spec/**/*'
+
+Metrics/ClassLength:
+  Severity: warning
+
+Metrics/LineLength:
+  Max: 100
+  Severity: warning
+
+Metrics/MethodLength:
+  Max: 12
+  Severity: warning
+
+Style/Documentation:
+  Enabled: false
+
+Style/FileName:
+  Exclude:
+    - 'lib/yle-aws-role.rb'
+
+Style/GuardClause:
+  MinBodyLength: 3
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/TrailingCommaInLiteral:
+  Enabled: false
