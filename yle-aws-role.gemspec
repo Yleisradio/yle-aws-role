@@ -23,9 +23,8 @@ Gem::Specification.new do |spec|
     'antti@fosu.me',
   ]
 
-  spec.files = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files = Dir['bin/**/*'] +
+               Dir['lib/**/*.rb']
 
   spec.bindir        = 'bin'
   spec.executables   = ['asu']
