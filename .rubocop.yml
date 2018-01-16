@@ -1,3 +1,6 @@
+AllCops:
+  TargetRubyVersion: 2.2
+
 Metrics/BlockLength:
   Exclude:
     - '*.gemspec'
@@ -14,12 +17,12 @@ Metrics/MethodLength:
   Max: 12
   Severity: warning
 
-Style/Documentation:
-  Enabled: false
-
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'lib/yle-aws-role.rb'
+
+Style/Documentation:
+  Enabled: false
 
 Style/GuardClause:
   MinBodyLength: 3
