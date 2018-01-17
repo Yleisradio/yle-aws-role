@@ -6,7 +6,7 @@ module Yle
   module AWS
     class Role
       class Cli
-        attr_reader :account_name, :command, :opts
+        attr_reader :account_name, :opts
 
         def initialize(argv)
           parse_args(argv)
@@ -55,7 +55,9 @@ module Yle
           STDERR.puts e
           exit 64
         end
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+        # rubocop:disable Metrics/AbcSize
         def execute
           return list_accounts if opts[:list]
 
@@ -69,6 +71,7 @@ module Yle
             end
           end
         end
+        # rubocop:enable Metrics/AbcSize
 
         def list_accounts
           puts Role.accounts
@@ -82,20 +85,25 @@ module Yle
         end
 
         def run_command
-          if command.empty?
-            shell = ENV.fetch('SHELL', 'bash')
-            command = [shell]
+          ret = system(*command)
+          STDERR.puts "Failed to execute '#{command.first}'" if ret.nil?
+          exit(1) if !ret
+        end
 
-            if !opts[:quiet]
-              puts "Executing shell '#{shell}' with the assumed role"
-              puts 'Use `exit` to quit'
-              puts
-            end
+        def command
+          @command ||= [shell]
+        end
+
+        def shell
+          shell = ENV.fetch('SHELL', 'bash')
+
+          if !opts[:quiet]
+            puts "Executing shell '#{shell}' with the assumed role"
+            puts 'Use `exit` to quit'
+            puts
           end
 
-          ret = system(*command)
-          STDERR.puts "Failed to execute '#{cmd.first}'" if ret.nil?
-          exit(1) if !ret
+          [shell]
         end
       end
     end
