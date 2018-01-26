@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.executables   = ['asu']
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'aws-sdk', '~> 2.6'
+  spec.add_dependency 'aws-sdk-core', '~> 3.0'
   spec.add_dependency 'slop', '~> 4.4'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
