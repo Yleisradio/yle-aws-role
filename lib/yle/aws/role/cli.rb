@@ -10,6 +10,7 @@ module Yle
 
         def initialize(argv)
           parse_args(argv)
+          verify_args
         end
 
         # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -39,55 +40,62 @@ module Yle
             end
           end
 
-          @account_name = opts.args.shift
-          @command = opts.args
-
-          if !@opts[:list]
-            if !@account_name
-              STDERR.puts @opts
-              exit 64
-            elsif !(@opts[:role] || Role.default_role_name)
-              STDERR.puts 'Role name must be passed with `--role` or set in the config'
-              exit 64
-            end
-          end
+          @account_name = @opts.args.shift
+          @command = @opts.args
         rescue Slop::Error => e
           STDERR.puts e
           exit 64
         end
         # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-        # rubocop:disable Metrics/AbcSize
-        def execute
-          return list_accounts if opts[:list]
+        def verify_args
+          return if opts[:list]
 
-          assume_role(account_name, opts[:role], opts[:duration]) do |role|
-            STDERR.puts("Assumed role #{role.name}") if !opts[:quiet]
+          if !account_name
+            STDERR.puts opts
+            exit 64
+          end
 
-            if opts[:env]
-              role.print_env_vars
-            else
-              run_command
-            end
+          if !(opts[:role] || Role.default_role_name)
+            STDERR.puts 'Role name must be passed with `--role` or set in the config'
+            exit 64
           end
         end
-        # rubocop:enable Metrics/AbcSize
+
+        def execute
+          if opts[:list]
+            list_accounts
+          elsif opts[:env]
+            print_env_vars
+          else
+            run_command
+          end
+        end
 
         def list_accounts
           puts Role.accounts
         end
 
-        def assume_role(account_name, role_name, duration, &block)
-          Role.assume_role(account_name, role_name, duration, &block)
-        rescue Errors::AssumeRoleError => e
-          STDERR.puts e
-          exit 1
+        def print_env_vars
+          assume_role(&:print_env_vars)
         end
 
         def run_command
-          ret = system(*command)
-          STDERR.puts "Failed to execute '#{command.first}'" if ret.nil?
-          exit(1) if !ret
+          assume_role do
+            ret = system(*command)
+            STDERR.puts "Failed to execute '#{command.first}'" if ret.nil?
+            exit(1) if !ret
+          end
+        end
+
+        def assume_role
+          Role.assume_role(account_name, opts[:role], opts[:duration]) do |role|
+            STDERR.puts("Assumed role #{role.name}") if !opts[:quiet]
+            yield role
+          end
+        rescue Errors::AssumeRoleError => e
+          STDERR.puts e
+          exit 1
         end
 
         def command
