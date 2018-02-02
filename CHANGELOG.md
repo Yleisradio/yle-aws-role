@@ -1,3 +1,6 @@
+## 2.0.2 / _Not released yet_
+
+
 ## 2.0.1 / 2018-02-02
 
 - Fix command line invocation when command is not specified ([GH-3](https://github.com/Yleisradio/yle-aws-role/pull/3))
