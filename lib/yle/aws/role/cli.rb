@@ -91,11 +91,12 @@ module Yle
         end
 
         def command
-          @command ||= [shell]
+          @command = shell if @command.empty?
+          @command
         end
 
         def shell
-          shell = ENV.fetch('SHELL', 'bash')
+          shell = default_shell
 
           if !opts[:quiet]
             puts "Executing shell '#{shell}' with the assumed role"
@@ -104,6 +105,10 @@ module Yle
           end
 
           [shell]
+        end
+
+        def default_shell
+          ENV.fetch('SHELL', 'bash')
         end
       end
     end
