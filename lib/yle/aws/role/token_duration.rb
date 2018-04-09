@@ -6,6 +6,8 @@ module Yle
     class Role
       # Default duration in seconds when assuming a role
       DEFAULT_DURATION = 900
+      #AWS gives lower bound for max age as 1 hour
+      SHORTEST_MAXIMUM_ALLOWED = 3600
 
       #private
 
@@ -14,6 +16,8 @@ module Yle
       end
 
       def get_validated_duration(account, role_name, duration)
+        return duration if duration.between? DEFAULT_DURATION, SHORTEST_MAXIMUM_ALLOWED
+
         assumed_role = Aws::AssumeRoleCredentials.new(
           role_arn: role_arn,
           role_session_name: session_name
