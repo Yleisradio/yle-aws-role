@@ -1,4 +1,4 @@
-require 'aws-sdk-iam'
+require 'aws-sdk-core'
 require 'shellwords'
 
 require 'yle/aws/role/accounts'
@@ -10,7 +10,6 @@ require 'yle/aws/role/token_duration'
 module Yle
   module AWS
     class Role
-
       def self.assume_role(account_name, role_name = nil, duration = nil)
         account_alias = accounts.find(account_name)
         if !account_alias
@@ -34,18 +33,12 @@ module Yle
         config['defaults']['role']
       end
 
-      def self.default_duration
-        default_token_duration
-      end
-
       attr_reader :account, :role_name, :credentials
 
       def initialize(account_alias, role_name = nil, duration = nil)
         @account = account_alias
         @role_name = role_name || Role.default_role_name
-
-        duration = get_validated_duration(@account, @role_name,
-          duration || Role.default_duration)
+        duration = token_duration(duration)
 
         raise Errors::AssumeRoleError, 'Role name not specified' if !@role_name
 
@@ -57,6 +50,10 @@ module Yle
       rescue Aws::STS::Errors::ServiceError,
              Aws::Errors::MissingCredentialsError => e
         raise Errors::AssumeRoleError, "Failed to assume role #{role_arn}: #{e}"
+      end
+
+      def token_duration(duration)
+        TokenDuration.new.validated_duration(@role_name, role_arn, session_name, duration)
       end
 
       def with_env

@@ -24,7 +24,7 @@ module Yle
                                             'Defaults to launching new shell session.'
             o.separator ''
             o.integer '-d', '--duration', 'Duration for the role credentials. ' \
-                                          "Default: #{Role.default_duration}"
+                                          "Default: #{TokenDuration.default_duration}"
             o.bool '--env', 'Print out environment variables and exit'
             o.bool '-l', '--list', 'Print out all configured account aliases'
             o.bool '-q', '--quiet', 'Be quiet'
