@@ -19,6 +19,11 @@ describe Yle::AWS::Role::Accounts do
         it { is_expected.to eq account_alias('112233445566', '112233445566') }
       end
 
+      context 'with a numeric account id' do
+        let(:id_or_alias) { 112_233_445_566 }
+        it { is_expected.to eq account_alias('112233445566', '112233445566') }
+      end
+
       context 'with a (non-existing) alias' do
         let(:id_or_alias) { 'foo' }
         it { is_expected.to be nil }
