@@ -12,9 +12,8 @@ module Yle
 
         # Returns an `AccountAlias` that best matches the passed string
         def find(id_or_alias)
-          if !id_or_alias.is_a?(String)
-            find(id_or_alias.to_s)
-          elsif account_id?(id_or_alias)
+          id_or_alias = id_or_alias.to_s
+          if account_id?(id_or_alias)
             name = aliases.key(id_or_alias) || id_or_alias
             AccountAlias.new(name, id_or_alias)
           else
