@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yle
   module AWS
     class Role
