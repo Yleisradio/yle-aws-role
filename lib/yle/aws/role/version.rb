@@ -3,7 +3,7 @@
 module Yle
   module AWS
     class Role
-      VERSION = '2.0.2'
+      VERSION = '2.0.3.dev'
     end
   end
 end

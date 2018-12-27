@@ -1,3 +1,6 @@
+## 2.0.3 / _Not released yet_
+
+
 ## 2.0.2 / 2018-12-27
 
 - Ensure that the account id is a string when searching ([GH-5](https://github.com/Yleisradio/yle-aws-role/pull/5))
