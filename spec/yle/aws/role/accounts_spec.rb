@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'yle/aws/role/accounts'
 
@@ -33,9 +35,9 @@ describe Yle::AWS::Role::Accounts do
     context 'without aliases' do
       let(:aliases) do
         {
-          'foo' => '123456789012',
-          'foo-bar' => '234567890123',
-          'baz' => '987654321098',
+          'foo'       => '123456789012',
+          'foo-bar'   => '234567890123',
+          'baz'       => '987654321098',
           'barbapapa' => '876543210987'
         }
       end

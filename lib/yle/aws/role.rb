@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'aws-sdk-core'
 require 'shellwords'
 
@@ -49,9 +51,9 @@ module Yle
         raise Errors::AssumeRoleError, 'Role name not specified' if !@role_name
 
         @credentials = Aws::AssumeRoleCredentials.new(
-          role_arn: role_arn,
+          role_arn:          role_arn,
           role_session_name: session_name,
-          duration_seconds: duration
+          duration_seconds:  duration
         ).credentials
       rescue Aws::STS::Errors::ServiceError,
              Aws::Errors::MissingCredentialsError => e

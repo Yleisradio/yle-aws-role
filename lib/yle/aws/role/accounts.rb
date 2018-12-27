@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yle
   module AWS
     class Role
@@ -39,8 +41,8 @@ module Yle
           aliases.keys.select { |key| matcher =~ key }.min_by(&:length)
         end
 
-        def alias_matcher(s)
-          pattern = s.gsub(/([^^])(?=[^$])/, '\1.*')
+        def alias_matcher(id_or_alias)
+          pattern = id_or_alias.gsub(/([^^])(?=[^$])/, '\1.*')
           Regexp.new(pattern)
         end
       end
