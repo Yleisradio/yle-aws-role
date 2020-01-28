@@ -29,7 +29,7 @@ module Yle
         def self.load_yaml(path)
           (path && File.exist?(path) && YAML.load_file(path)) || {}
         rescue StandardError
-          STDERR.puts("WARN: Failed to load or parse configuration from '#{path}'")
+          warn("WARN: Failed to load or parse configuration from '#{path}'")
           {}
         end
 

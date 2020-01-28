@@ -45,7 +45,7 @@ module Yle
           @account_name = @opts.args.shift
           @command = @opts.args
         rescue Slop::Error => e
-          STDERR.puts e
+          warn e
           exit 64
         end
         # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -54,12 +54,12 @@ module Yle
           return if opts[:list]
 
           if !account_name
-            STDERR.puts opts
+            warn opts
             exit 64
           end
 
           if !(opts[:role] || Role.default_role_name)
-            STDERR.puts 'Role name must be passed with `--role` or set in the config'
+            warn 'Role name must be passed with `--role` or set in the config'
             exit 64
           end
         end
@@ -85,18 +85,18 @@ module Yle
         def run_command
           assume_role do
             ret = system(*command)
-            STDERR.puts "Failed to execute '#{command.first}'" if ret.nil?
+            warn "Failed to execute '#{command.first}'" if ret.nil?
             exit(1) if !ret
           end
         end
 
         def assume_role
           Role.assume_role(account_name, opts[:role], opts[:duration]) do |role|
-            STDERR.puts("Assumed role #{role.name}") if !opts[:quiet]
+            warn("Assumed role #{role.name}") if !opts[:quiet]
             yield role
           end
         rescue Errors::AssumeRoleError => e
-          STDERR.puts e
+          warn e
           exit 1
         end
 
